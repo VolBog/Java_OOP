@@ -1,13 +1,21 @@
 package Lesson3;
 
-public class Student extends Human implements Comparable<Student> {
+import Lesson3.Interface.CSVConverter;
+
+public class Student extends Human implements CSVConverter {
     private Group group;
+    private long recordBook = 0;
 
     public Student() {
     }
 
     public Student(String name, String surname, int age, Sex sex) {
         super(name, surname, age, sex);
+    }
+
+    public Student(String name, String surname, int age, Sex sex, long recordBook) {
+        super(name, surname, age, sex);
+        this.recordBook = recordBook;
     }
 
     public Group getGroup() {
@@ -18,15 +26,50 @@ public class Student extends Human implements Comparable<Student> {
         this.group = group;
     }
 
-    @Override
-    public void getInformation() {
-        super.getInformation();
+    public long getRecordBook() {
+        return recordBook;
+    }
+
+    public void setRecordBook(long recordBook) {
+        this.recordBook = recordBook;
     }
 
     @Override
-    public int compareTo(Student student) {
-        // usually toString should not be used,
-        // instead one of the attributes or more in a comparator chain
-        return getSurname().compareTo(student.getSurname());
+    public void getInformation() {
+        super.getInformation();
+        System.out.println("Імя: " + super.getName() +
+                ", прізвище: " + super.getSurname() +
+                ", вік: " + super.getAge() +
+                ", sex: " + super.getSex() +
+                " заліковка: " + this.getRecordBook() +
+                " група: " + group.getName());
+    }
+
+    @Override
+    public String toCSVString() {
+        String separator = ";";
+        String csvLine = super.getName() + separator + super.getSurname() + separator +
+                super.getAge() + separator + super.getSex() + separator + this.getRecordBook() + separator;
+
+        return csvLine;
+    }
+
+    @Override
+    public Student fromCSVString(String str) {
+        String[] strings = str.split(";");
+        return new Student(strings[0], strings[1], Integer.parseInt(strings[2]), Sex.valueOf(strings[3]), Long.parseLong(strings[4]));
+    }
+
+    @Override
+    public String toString() {
+        String data = "Імя: " + super.getName() +
+                ", прізвище: " + super.getSurname() +
+                ", вік: " + super.getAge() +
+                ", sex: " + super.getSex() +
+                " заліковка: " + this.getRecordBook();
+        if (group != null) {
+            data += " група: " + group.getName();
+        }
+        return data;
     }
 }

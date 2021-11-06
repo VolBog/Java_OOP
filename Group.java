@@ -1,8 +1,10 @@
 package Lesson3;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class Group {
+    private static long maxRecordBook;
     private String name;
     private Student[] students = new Student[10];
 
@@ -24,6 +26,9 @@ public class Group {
     public void addStudent(Student student) throws StudentException {
         for (int i = 0; i < students.length; i++) {
             if (students[i] == null) {
+                if (student.getRecordBook() == 0) {
+                    student.setRecordBook(++maxRecordBook);
+                }
                 students[i] = student;
                 student.setGroup(this);
                 return;
@@ -51,13 +56,37 @@ public class Group {
         return null;
     }
 
+    public Student find(int recordBook) {
+        for (int i = 0; i < students.length; i++) {
+            if (students[i] != null && students[i].getRecordBook() == recordBook) {
+                return students[i];
+            }
+        }
+        return null;
+    }
+
+    public void sortStudentsByLastName() {
+        Arrays.sort(students, Comparator.nullsFirst(new SortByLastNameComparator()));
+    }
+
+
+    public Student[] getStudents() {
+        return students;
+    }
+
+    public void setStudents(Student[] students) {
+        this.students = students;
+    }
+
     @Override
     public String toString() {
-        Arrays.sort(students);
+        sortStudentsByLastName();
         String group = "Група " + this.name;
         for (Student student :
                 students) {
-            group += "\n" + student.toString();
+            if (student != null) {
+                group += "\n" + student.toString();
+            }
         }
         return group;
     }
