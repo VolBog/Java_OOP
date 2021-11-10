@@ -90,4 +90,36 @@ public class Group {
         }
         return group;
     }
+
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+
+        Group group = (Group) object;
+
+        if (!name.equals(group.name)) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!java.util.Arrays.equals(students, group.students)) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + Arrays.hashCode(students);
+        return result;
+    }
+
+    public boolean isEquals() {
+        for (int i = 0; i < students.length; i++) {
+            for (int j = 0; j < students.length; j++) {
+                if(i != j && students[i].equals(students[j])){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

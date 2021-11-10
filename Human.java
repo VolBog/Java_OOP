@@ -55,6 +55,30 @@ public class Human {
                 ", sex: " + sex);
     }
 
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+
+        Human human = (Human) object;
+
+        if (age != human.age) return false;
+        if (!name.equals(human.name)) return false;
+        if (!surname.equals(human.surname)) return false;
+        if (!sex.equals(human.sex)) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + surname.hashCode();
+        result = 31 * result + age;
+        result = 31 * result + sex.hashCode();
+        return result;
+    }
+
     @Override
     public String toString() {
         return "Імя: " + name +

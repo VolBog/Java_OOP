@@ -72,4 +72,24 @@ public class Student extends Human implements CSVConverter {
         }
         return data;
     }
+
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+
+        Student student = (Student) object;
+
+        if (recordBook != student.recordBook) return false;
+        if (group != null ? !group.equals(student.group) : student.group != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (group != null ? group.hashCode() : 0);
+        result = 31 * result + (int) (recordBook ^ (recordBook >>> 32));
+        return result;
+    }
 }
