@@ -1,8 +1,4 @@
-package Lesson3;
-
-import Lesson3.Interface.CSVConverter;
-
-public class Student extends Human implements CSVConverter {
+public class Student extends Human implements CSVConverterInterface {
     private Group group;
     private long recordBook = 0;
 

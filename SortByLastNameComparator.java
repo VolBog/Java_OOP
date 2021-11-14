@@ -1,4 +1,3 @@
-package Lesson3;
 
 import java.util.Comparator;
 

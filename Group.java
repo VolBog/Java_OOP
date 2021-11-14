@@ -1,18 +1,22 @@
-package Lesson3;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
 public class Group {
     private static long maxRecordBook;
     private String name;
-    private Student[] students = new Student[10];
+    private List<Student> students = new ArrayList<>();
+    private int capacity = 10;
 
     public Group() {
     }
 
     public Group(String name) {
         this.name = name;
+    }
+
+    public Group(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
     }
 
     public String getName() {
@@ -24,57 +28,43 @@ public class Group {
     }
 
     public void addStudent(Student student) throws StudentException {
-        for (int i = 0; i < students.length; i++) {
-            if (students[i] == null) {
-                if (student.getRecordBook() == 0) {
-                    student.setRecordBook(++maxRecordBook);
-                }
-                students[i] = student;
-                student.setGroup(this);
-                return;
+        if (students.size() <= capacity) {
+            student.setGroup(this);
+            if (student.getRecordBook() == 0) {
+                student.setRecordBook(++maxRecordBook);
             }
+            students.add(student);
+        } else {
+            throw new StudentException();
         }
-        throw new StudentException();
     }
 
     public void deleteStudent(String surname) {
-        for (int i = 0; i < students.length; i++) {
-            if (students[i] != null && students[i].getSurname().equalsIgnoreCase(surname)) {
-                students[i].setGroup(null);
-                students[i] = null;
-                break;
-            }
+        Student student = this.find(surname);
+        if(student != null){
+            students.remove(student);
+            student.setGroup(null);
         }
     }
 
     public Student find(String surname) {
-        for (int i = 0; i < students.length; i++) {
-            if (students[i] != null && students[i].getSurname().equalsIgnoreCase(surname)) {
-                return students[i];
-            }
-        }
-        return null;
+        return students.stream().filter(s -> surname.equalsIgnoreCase(s.getSurname())).findAny().orElse(null);
     }
 
     public Student find(int recordBook) {
-        for (int i = 0; i < students.length; i++) {
-            if (students[i] != null && students[i].getRecordBook() == recordBook) {
-                return students[i];
-            }
-        }
-        return null;
+       return students.stream().filter(s -> recordBook == s.getRecordBook()).findAny().orElse(null);
     }
 
     public void sortStudentsByLastName() {
-        Arrays.sort(students, Comparator.nullsFirst(new SortByLastNameComparator()));
+        students.sort(new SortByLastNameComparator());
     }
 
 
-    public Student[] getStudents() {
+    public List<Student> getStudents() {
         return students;
     }
 
-    public void setStudents(Student[] students) {
+    public void setStudents(List<Student> students) {
         this.students = students;
     }
 
@@ -91,35 +81,27 @@ public class Group {
         return group;
     }
 
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        if (!super.equals(object)) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Group group = (Group) object;
+        Group group = (Group) o;
 
+        if (capacity != group.capacity) return false;
         if (!name.equals(group.name)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!java.util.Arrays.equals(students, group.students)) return false;
-
-        return true;
+        return students.equals(group.students);
     }
 
+    @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + Arrays.hashCode(students);
+        int result = name.hashCode();
+        result = 31 * result + students.hashCode();
+        result = 31 * result + capacity;
         return result;
     }
 
     public boolean isEquals() {
-        for (int i = 0; i < students.length; i++) {
-            for (int j = 0; j < students.length; j++) {
-                if(i != j && students[i].equals(students[j])){
-                    return true;
-                }
-            }
-        }
-        return false;
+        return students.stream().allMatch(new HashSet<>()::add);
     }
 }

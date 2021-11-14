@@ -1,4 +1,4 @@
-package Lesson3;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -11,12 +11,12 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int n = 0;
         System.out.println("Введіть кількість студентів");
-        for(;;){
+        for (; ; ) {
 
             try {
                 n = Integer.parseInt(sc.next());
                 break;
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Введіть число");
             }
         }
@@ -34,7 +34,7 @@ public class Main {
         File f = new File(".");
         System.out.println(f.getAbsolutePath());
 
-        File file =  GroupFileStorage.findFileByGroupName("A", f);
+        File file = GroupFileStorage.findFileByGroupName("A", f);
 
         Group g = GroupFileStorage.loadGroupFromCSV(file);
         System.out.println(g);
